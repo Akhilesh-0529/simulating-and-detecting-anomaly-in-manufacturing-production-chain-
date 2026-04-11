@@ -17,7 +17,7 @@ fod/
 ├── features/extractor.py      sliding-window feature extraction
 ├── detection/detector.py      sklearn-compatible semi-supervised detector
 ├── evaluation/metrics.py      event-level TPR, FPR, advance-detection-time
-├── run_demo.py                end-to-end pipeline demo
+├── run_demo.py                end-to-end pipeline 
 └── requirements.txt
 ```
 
