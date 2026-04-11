@@ -1,4 +1,4 @@
-# Foreign Object Detection — ESoC Demo Portfolio Project
+# Foreign Object Detection —  Demo Portfolio Project
 
 A multivariate time-series detection pipeline built with `sktime` and `scikit-learn`,
 demonstrating early event detection on synthetic sensor data (vibration, acoustics, mechanics).
