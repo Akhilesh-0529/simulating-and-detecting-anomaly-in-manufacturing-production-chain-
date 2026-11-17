@@ -1,6 +1,8 @@
-sktime>=0.29.0
-scikit-learn>=1.4.0
-numpy>=1.26.0
-pandas>=2.2.0
-matplotlib>=3.8.0
-scipy>=1.12.0
+# Core YOLOv8 detection (optional — falls back to simulation if not installed)
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# Optional: local LLM root-cause analysis
+# Install Ollama from https://ollama.ai and run: ollama pull llama3.2
+# The system auto-detects and uses it if available

@@ -1,0 +1,177 @@
+{
+  "cycle_id": 1,
+  "batch_id": "CYCLE_01_NORMAL",
+  "timestamp": "2026-11-18T01:03:07.697931",
+  "stations": [
+    {
+      "station": "STATION_1 \u2014 CNC Milling",
+      "telemetry": {
+        "temperature_c": 28.1,
+        "vibration_mm_s": 2.2,
+        "pressure_bar": 6.14,
+        "conveyor_speed": 1.28,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.969,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
+          "confidence": 0.819,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_2 \u2014 Thermal Treatment",
+      "telemetry": {
+        "temperature_c": 25.7,
+        "vibration_mm_s": 1.76,
+        "pressure_bar": 6.23,
+        "conveyor_speed": 1.23,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.98,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
+          "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
+          "confidence": 0.798,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_3 \u2014 Robotic Assembly",
+      "telemetry": {
+        "temperature_c": 28.2,
+        "vibration_mm_s": 2.17,
+        "pressure_bar": 6.07,
+        "conveyor_speed": 1.2,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.94,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
+          "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
+          "confidence": 0.797,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_4 \u2014 QA Worker Zone",
+      "telemetry": {
+        "temperature_c": 29.6,
+        "vibration_mm_s": 2.11,
+        "pressure_bar": 6.0,
+        "conveyor_speed": 1.19,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "worker_person",
+          "confidence": 0.968,
+          "bbox": [
+            180,
+            80,
+            460,
+            580
+          ],
+          "category": "person"
+        },
+        {
+          "class": "safety_helmet",
+          "confidence": 0.959,
+          "bbox": [
+            270,
+            90,
+            370,
+            170
+          ],
+          "category": "ppe"
+        },
+        {
+          "class": "high_vis_vest",
+          "confidence": 0.924,
+          "bbox": [
+            220,
+            180,
+            420,
+            400
+          ],
+          "category": "ppe"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "high_vis_vest",
+          "severity": "MEDIUM",
+          "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
+          "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
+          "confidence": 0.889,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "safety_helmet",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
+          "confidence": 0.911,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "worker_person",
+          "severity": "MEDIUM",
+          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
+          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "confidence": 0.802,
+          "provider": "template_engine"
+        }
+      ]
+    }
+  ]
+}

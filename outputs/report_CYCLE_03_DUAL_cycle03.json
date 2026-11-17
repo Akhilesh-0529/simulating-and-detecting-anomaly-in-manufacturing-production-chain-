@@ -1,0 +1,234 @@
+{
+  "cycle_id": 3,
+  "batch_id": "CYCLE_03_DUAL",
+  "timestamp": "2026-11-18T01:03:08.507570",
+  "stations": [
+    {
+      "station": "STATION_1 \u2014 CNC Milling",
+      "telemetry": {
+        "temperature_c": 26.5,
+        "vibration_mm_s": 7.07,
+        "pressure_bar": 6.1,
+        "conveyor_speed": 1.15,
+        "status": "CRITICAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.953,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        },
+        {
+          "class": "surface_scratch",
+          "confidence": 0.916,
+          "bbox": [
+            182,
+            374,
+            224,
+            415
+          ],
+          "category": "defect"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
+          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "confidence": 0.944,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "surface_scratch",
+          "severity": "MEDIUM",
+          "root_cause": "Vibration-induced chatter from loose fixture clamp (torque spec: 45 Nm, actual < 30 Nm).",
+          "recommended_action": "Re-torque fixture clamps to spec. Run test cut on scrap material before resuming production.",
+          "confidence": 0.834,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_2 \u2014 Thermal Treatment",
+      "telemetry": {
+        "temperature_c": 106.4,
+        "vibration_mm_s": 1.44,
+        "pressure_bar": 6.21,
+        "conveyor_speed": 1.24,
+        "status": "CRITICAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.984,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        },
+        {
+          "class": "dimensional_warp",
+          "confidence": 0.94,
+          "bbox": [
+            376,
+            364,
+            432,
+            387
+          ],
+          "category": "defect"
+        },
+        {
+          "class": "hairline_crack",
+          "confidence": 0.885,
+          "bbox": [
+            220,
+            316,
+            255,
+            366
+          ],
+          "category": "defect"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
+          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "confidence": 0.871,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "hairline_crack",
+          "severity": "HIGH",
+          "root_cause": "Thermal gradient during quench-hardening exceeded 180\u00b0C/min \u2014 residual tensile stress nucleated micro-crack.",
+          "recommended_action": "HALT production. 100% ultrasonic inspection of current batch. Adjust quench rate to \u2264120\u00b0C/min.",
+          "confidence": 0.808,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "dimensional_warp",
+          "severity": "MEDIUM",
+          "root_cause": "Thermal soak non-uniformity in furnace zone 3 \u2014 thermocouple TC-07 calibration drift of +12\u00b0C.",
+          "recommended_action": "Recalibrate TC-07. Ramp furnace gradually. Measure warpage with CMM; re-straighten affected parts.",
+          "confidence": 0.877,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_3 \u2014 Robotic Assembly",
+      "telemetry": {
+        "temperature_c": 27.5,
+        "vibration_mm_s": 2.09,
+        "pressure_bar": 6.22,
+        "conveyor_speed": 1.26,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.976,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
+          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "confidence": 0.945,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_4 \u2014 QA Worker Zone",
+      "telemetry": {
+        "temperature_c": 27.3,
+        "vibration_mm_s": 1.8,
+        "pressure_bar": 5.96,
+        "conveyor_speed": 1.17,
+        "status": "CRITICAL"
+      },
+      "detections": [
+        {
+          "class": "worker_person",
+          "confidence": 0.963,
+          "bbox": [
+            180,
+            80,
+            460,
+            580
+          ],
+          "category": "person"
+        },
+        {
+          "class": "missing_helmet",
+          "confidence": 0.958,
+          "bbox": [
+            270,
+            90,
+            370,
+            170
+          ],
+          "category": "ppe"
+        },
+        {
+          "class": "missing_vest",
+          "confidence": 0.921,
+          "bbox": [
+            220,
+            180,
+            420,
+            400
+          ],
+          "category": "ppe"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "missing_vest",
+          "severity": "HIGH",
+          "root_cause": "Vest damaged and discarded; replacement not logged in PPE management system.",
+          "recommended_action": "Update PPE inventory system. Mandate daily PPE station inspection by shift supervisor.",
+          "confidence": 0.838,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "worker_person",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
+          "confidence": 0.8,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "missing_helmet",
+          "severity": "CRITICAL",
+          "root_cause": "PPE compliance gate sensor malfunction \u2014 barrier arm raised without helmet detection.",
+          "recommended_action": "Lock entry gate. Inspect and repair sensor array. Audit last 2-hour access log.",
+          "confidence": 0.938,
+          "provider": "template_engine"
+        }
+      ]
+    }
+  ]
+}

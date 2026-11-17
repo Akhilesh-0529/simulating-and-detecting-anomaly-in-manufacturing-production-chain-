@@ -1,0 +1,196 @@
+{
+  "cycle_id": 5,
+  "batch_id": "CYCLE_05_RECOVERY",
+  "timestamp": "2026-11-18T01:03:09.323724",
+  "stations": [
+    {
+      "station": "STATION_1 \u2014 CNC Milling",
+      "telemetry": {
+        "temperature_c": 27.7,
+        "vibration_mm_s": 2.06,
+        "pressure_bar": 5.98,
+        "conveyor_speed": 1.14,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.945,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
+          "confidence": 0.81,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_2 \u2014 Thermal Treatment",
+      "telemetry": {
+        "temperature_c": 28.7,
+        "vibration_mm_s": 2.38,
+        "pressure_bar": 6.12,
+        "conveyor_speed": 1.18,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.973,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
+          "confidence": 0.957,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_3 \u2014 Robotic Assembly",
+      "telemetry": {
+        "temperature_c": 29.4,
+        "vibration_mm_s": 2.11,
+        "pressure_bar": 2.97,
+        "conveyor_speed": 1.22,
+        "status": "CRITICAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.967,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        },
+        {
+          "class": "component_misalignment",
+          "confidence": 0.852,
+          "bbox": [
+            203,
+            392,
+            253,
+            417
+          ],
+          "category": "defect"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
+          "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
+          "confidence": 0.947,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "component_misalignment",
+          "severity": "HIGH",
+          "root_cause": "Part feeder bowl vibration frequency shifted, causing inconsistent part presentation angle.",
+          "recommended_action": "Adjust bowl feeder amplitude to 60 Hz nominal. Inspect and replace worn track sections.",
+          "confidence": 0.831,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_4 \u2014 QA Worker Zone",
+      "telemetry": {
+        "temperature_c": 27.7,
+        "vibration_mm_s": 2.07,
+        "pressure_bar": 6.21,
+        "conveyor_speed": 1.11,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "worker_person",
+          "confidence": 0.944,
+          "bbox": [
+            180,
+            80,
+            460,
+            580
+          ],
+          "category": "person"
+        },
+        {
+          "class": "safety_helmet",
+          "confidence": 0.944,
+          "bbox": [
+            270,
+            90,
+            370,
+            170
+          ],
+          "category": "ppe"
+        },
+        {
+          "class": "high_vis_vest",
+          "confidence": 0.961,
+          "bbox": [
+            220,
+            180,
+            420,
+            400
+          ],
+          "category": "ppe"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "high_vis_vest",
+          "severity": "MEDIUM",
+          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
+          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "confidence": 0.952,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "safety_helmet",
+          "severity": "MEDIUM",
+          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
+          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "confidence": 0.899,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "worker_person",
+          "severity": "MEDIUM",
+          "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
+          "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
+          "confidence": 0.808,
+          "provider": "template_engine"
+        }
+      ]
+    }
+  ]
+}

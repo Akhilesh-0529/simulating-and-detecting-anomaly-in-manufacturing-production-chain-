@@ -1,0 +1,234 @@
+{
+  "cycle_id": 4,
+  "batch_id": "CYCLE_04_PNEUMATIC",
+  "timestamp": "2026-11-18T01:03:08.916067",
+  "stations": [
+    {
+      "station": "STATION_1 \u2014 CNC Milling",
+      "telemetry": {
+        "temperature_c": 28.9,
+        "vibration_mm_s": 2.01,
+        "pressure_bar": 6.04,
+        "conveyor_speed": 1.19,
+        "status": "NORMAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.976,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
+          "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
+          "confidence": 0.793,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_2 \u2014 Thermal Treatment",
+      "telemetry": {
+        "temperature_c": 75.8,
+        "vibration_mm_s": 1.95,
+        "pressure_bar": 6.28,
+        "conveyor_speed": 1.19,
+        "status": "CRITICAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.96,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        },
+        {
+          "class": "dimensional_warp",
+          "confidence": 0.931,
+          "bbox": [
+            275,
+            312,
+            343,
+            346
+          ],
+          "category": "defect"
+        },
+        {
+          "class": "hairline_crack",
+          "confidence": 0.865,
+          "bbox": [
+            237,
+            216,
+            293,
+            236
+          ],
+          "category": "defect"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
+          "confidence": 0.83,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "hairline_crack",
+          "severity": "HIGH",
+          "root_cause": "Material hydrogen embrittlement from inadequate pre-heat. Moisture in feedstock batch B-2024-11.",
+          "recommended_action": "Quarantine feedstock batch B-2024-11. Conduct bake-out at 200\u00b0C for 4 h. Notify materials QA.",
+          "confidence": 0.819,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "dimensional_warp",
+          "severity": "MEDIUM",
+          "root_cause": "Thermal soak non-uniformity in furnace zone 3 \u2014 thermocouple TC-07 calibration drift of +12\u00b0C.",
+          "recommended_action": "Recalibrate TC-07. Ramp furnace gradually. Measure warpage with CMM; re-straighten affected parts.",
+          "confidence": 0.91,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_3 \u2014 Robotic Assembly",
+      "telemetry": {
+        "temperature_c": 25.6,
+        "vibration_mm_s": 1.68,
+        "pressure_bar": 2.78,
+        "conveyor_speed": 1.25,
+        "status": "CRITICAL"
+      },
+      "detections": [
+        {
+          "class": "manufactured_part",
+          "confidence": 0.969,
+          "bbox": [
+            120,
+            140,
+            520,
+            480
+          ],
+          "category": "component"
+        },
+        {
+          "class": "component_misalignment",
+          "confidence": 0.878,
+          "bbox": [
+            236,
+            201,
+            275,
+            243
+          ],
+          "category": "defect"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
+          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "confidence": 0.884,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "component_misalignment",
+          "severity": "HIGH",
+          "root_cause": "Robotic arm TCP calibration drift \u2014 end-effector offset accumulated to 2.3 mm over 8 h shift.",
+          "recommended_action": "Trigger TCP recalibration sequence. Run 5-point probe routine. Verify with \u00b10.1 mm positional check.",
+          "confidence": 0.921,
+          "provider": "template_engine"
+        }
+      ]
+    },
+    {
+      "station": "STATION_4 \u2014 QA Worker Zone",
+      "telemetry": {
+        "temperature_c": 27.4,
+        "vibration_mm_s": 2.56,
+        "pressure_bar": 6.11,
+        "conveyor_speed": 1.12,
+        "status": "CRITICAL"
+      },
+      "detections": [
+        {
+          "class": "worker_person",
+          "confidence": 0.958,
+          "bbox": [
+            180,
+            80,
+            460,
+            580
+          ],
+          "category": "person"
+        },
+        {
+          "class": "missing_helmet",
+          "confidence": 0.898,
+          "bbox": [
+            270,
+            90,
+            370,
+            170
+          ],
+          "category": "ppe"
+        },
+        {
+          "class": "missing_vest",
+          "confidence": 0.932,
+          "bbox": [
+            220,
+            180,
+            420,
+            400
+          ],
+          "category": "ppe"
+        }
+      ],
+      "root_cause_analyses": [
+        {
+          "defect_type": "missing_vest",
+          "severity": "HIGH",
+          "root_cause": "Vest supply depleted at PPE station \u2014 inventory not restocked after last shift.",
+          "recommended_action": "Restock PPE station immediately. Implement low-stock alert at 10-unit threshold.",
+          "confidence": 0.814,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "worker_person",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
+          "confidence": 0.899,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "missing_helmet",
+          "severity": "CRITICAL",
+          "root_cause": "PPE compliance gate sensor malfunction \u2014 barrier arm raised without helmet detection.",
+          "recommended_action": "Lock entry gate. Inspect and repair sensor array. Audit last 2-hour access log.",
+          "confidence": 0.856,
+          "provider": "template_engine"
+        }
+      ]
+    }
+  ]
+}
