@@ -1,7 +1,7 @@
 {
   "cycle_id": 3,
   "batch_id": "CYCLE_03_DUAL",
-  "timestamp": "2026-11-18T01:03:08.507570",
+  "timestamp": "2026-11-17T20:18:39.216416",
   "stations": [
     {
       "station": "STATION_1 \u2014 CNC Milling",
@@ -101,10 +101,10 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "manufactured_part",
+          "defect_type": "dimensional_warp",
           "severity": "MEDIUM",
-          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
-          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "root_cause": "Rapid cooling airflow asymmetry \u2014 left-side nozzles at 60% capacity due to blockage.",
+          "recommended_action": "Clear nozzle blockage. Verify balanced airflow with anemometer. Increase total cycle time by 8 min.",
           "confidence": 0.871,
           "provider": "template_engine"
         },
@@ -117,10 +117,10 @@
           "provider": "template_engine"
         },
         {
-          "defect_type": "dimensional_warp",
+          "defect_type": "manufactured_part",
           "severity": "MEDIUM",
-          "root_cause": "Thermal soak non-uniformity in furnace zone 3 \u2014 thermocouple TC-07 calibration drift of +12\u00b0C.",
-          "recommended_action": "Recalibrate TC-07. Ramp furnace gradually. Measure warpage with CMM; re-straighten affected parts.",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
           "confidence": 0.877,
           "provider": "template_engine"
         }
@@ -205,10 +205,10 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "missing_vest",
-          "severity": "HIGH",
-          "root_cause": "Vest damaged and discarded; replacement not logged in PPE management system.",
-          "recommended_action": "Update PPE inventory system. Mandate daily PPE station inspection by shift supervisor.",
+          "defect_type": "missing_helmet",
+          "severity": "CRITICAL",
+          "root_cause": "Helmet removed inside zone \u2014 worker reported discomfort with current PPE model (heat/weight).",
+          "recommended_action": "Provide ergonomic helmet alternatives. Update PPE comfort policy. Conduct safety stand-down.",
           "confidence": 0.838,
           "provider": "template_engine"
         },
@@ -221,10 +221,10 @@
           "provider": "template_engine"
         },
         {
-          "defect_type": "missing_helmet",
-          "severity": "CRITICAL",
-          "root_cause": "PPE compliance gate sensor malfunction \u2014 barrier arm raised without helmet detection.",
-          "recommended_action": "Lock entry gate. Inspect and repair sensor array. Audit last 2-hour access log.",
+          "defect_type": "missing_vest",
+          "severity": "HIGH",
+          "root_cause": "Vest supply depleted at PPE station \u2014 inventory not restocked after last shift.",
+          "recommended_action": "Restock PPE station immediately. Implement low-stock alert at 10-unit threshold.",
           "confidence": 0.938,
           "provider": "template_engine"
         }

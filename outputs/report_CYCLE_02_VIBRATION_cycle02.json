@@ -1,7 +1,7 @@
 {
   "cycle_id": 2,
   "batch_id": "CYCLE_02_VIBRATION",
-  "timestamp": "2026-11-18T01:03:08.103896",
+  "timestamp": "2026-11-17T20:18:38.811064",
   "stations": [
     {
       "station": "STATION_1 \u2014 CNC Milling",
@@ -49,18 +49,18 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "manufactured_part",
-          "severity": "MEDIUM",
-          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
-          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
-          "confidence": 0.821,
-          "provider": "template_engine"
-        },
-        {
           "defect_type": "hairline_crack",
           "severity": "HIGH",
           "root_cause": "Thermal gradient during quench-hardening exceeded 180\u00b0C/min \u2014 residual tensile stress nucleated micro-crack.",
           "recommended_action": "HALT production. 100% ultrasonic inspection of current batch. Adjust quench rate to \u2264120\u00b0C/min.",
+          "confidence": 0.821,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
           "confidence": 0.925,
           "provider": "template_engine"
         },
@@ -186,7 +186,7 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "high_vis_vest",
+          "defect_type": "safety_helmet",
           "severity": "MEDIUM",
           "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
           "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
@@ -194,7 +194,7 @@
           "provider": "template_engine"
         },
         {
-          "defect_type": "safety_helmet",
+          "defect_type": "high_vis_vest",
           "severity": "MEDIUM",
           "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
           "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",

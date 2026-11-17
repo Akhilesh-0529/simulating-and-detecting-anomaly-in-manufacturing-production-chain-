@@ -1,7 +1,7 @@
 {
   "cycle_id": 4,
   "batch_id": "CYCLE_04_PNEUMATIC",
-  "timestamp": "2026-11-18T01:03:08.916067",
+  "timestamp": "2026-11-17T20:18:39.619396",
   "stations": [
     {
       "station": "STATION_1 \u2014 CNC Milling",
@@ -82,10 +82,10 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "manufactured_part",
+          "defect_type": "dimensional_warp",
           "severity": "MEDIUM",
-          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
-          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
+          "root_cause": "Thermal soak non-uniformity in furnace zone 3 \u2014 thermocouple TC-07 calibration drift of +12\u00b0C.",
+          "recommended_action": "Recalibrate TC-07. Ramp furnace gradually. Measure warpage with CMM; re-straighten affected parts.",
           "confidence": 0.83,
           "provider": "template_engine"
         },
@@ -98,10 +98,10 @@
           "provider": "template_engine"
         },
         {
-          "defect_type": "dimensional_warp",
+          "defect_type": "manufactured_part",
           "severity": "MEDIUM",
-          "root_cause": "Thermal soak non-uniformity in furnace zone 3 \u2014 thermocouple TC-07 calibration drift of +12\u00b0C.",
-          "recommended_action": "Recalibrate TC-07. Ramp furnace gradually. Measure warpage with CMM; re-straighten affected parts.",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
           "confidence": 0.91,
           "provider": "template_engine"
         }
@@ -142,18 +142,18 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "manufactured_part",
-          "severity": "MEDIUM",
-          "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
-          "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
+          "defect_type": "component_misalignment",
+          "severity": "HIGH",
+          "root_cause": "Fixture wear: locating pin diameter worn 0.15 mm below tolerance after 50,000 cycles.",
+          "recommended_action": "Replace locating pins. Verify fixture accuracy with CMM. Implement 10,000-cycle PM schedule.",
           "confidence": 0.884,
           "provider": "template_engine"
         },
         {
-          "defect_type": "component_misalignment",
-          "severity": "HIGH",
-          "root_cause": "Robotic arm TCP calibration drift \u2014 end-effector offset accumulated to 2.3 mm over 8 h shift.",
-          "recommended_action": "Trigger TCP recalibration sequence. Run 5-point probe routine. Verify with \u00b10.1 mm positional check.",
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Process parameter deviation detected \u2014 systematic drift in upstream station output.",
+          "recommended_action": "Isolate affected batch. Run statistical process control (SPC) chart analysis.",
           "confidence": 0.921,
           "provider": "template_engine"
         }
@@ -205,10 +205,10 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "missing_vest",
-          "severity": "HIGH",
-          "root_cause": "Vest supply depleted at PPE station \u2014 inventory not restocked after last shift.",
-          "recommended_action": "Restock PPE station immediately. Implement low-stock alert at 10-unit threshold.",
+          "defect_type": "missing_helmet",
+          "severity": "CRITICAL",
+          "root_cause": "PPE compliance gate sensor malfunction \u2014 barrier arm raised without helmet detection.",
+          "recommended_action": "Lock entry gate. Inspect and repair sensor array. Audit last 2-hour access log.",
           "confidence": 0.814,
           "provider": "template_engine"
         },
@@ -221,10 +221,10 @@
           "provider": "template_engine"
         },
         {
-          "defect_type": "missing_helmet",
-          "severity": "CRITICAL",
-          "root_cause": "PPE compliance gate sensor malfunction \u2014 barrier arm raised without helmet detection.",
-          "recommended_action": "Lock entry gate. Inspect and repair sensor array. Audit last 2-hour access log.",
+          "defect_type": "missing_vest",
+          "severity": "HIGH",
+          "root_cause": "Vest supply depleted at PPE station \u2014 inventory not restocked after last shift.",
+          "recommended_action": "Restock PPE station immediately. Implement low-stock alert at 10-unit threshold.",
           "confidence": 0.856,
           "provider": "template_engine"
         }

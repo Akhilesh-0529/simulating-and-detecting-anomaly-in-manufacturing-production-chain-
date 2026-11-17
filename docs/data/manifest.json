@@ -1,0 +1,9 @@
+{
+  "files": [
+    "report_CYCLE_01_NORMAL_cycle01.json",
+    "report_CYCLE_02_VIBRATION_cycle02.json",
+    "report_CYCLE_03_DUAL_cycle03.json",
+    "report_CYCLE_04_PNEUMATIC_cycle04.json",
+    "report_CYCLE_05_RECOVERY_cycle05.json"
+  ]
+}

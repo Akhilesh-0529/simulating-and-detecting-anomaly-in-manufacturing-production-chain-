@@ -1,7 +1,7 @@
 {
   "cycle_id": 5,
   "batch_id": "CYCLE_05_RECOVERY",
-  "timestamp": "2026-11-18T01:03:09.323724",
+  "timestamp": "2026-11-17T20:18:40.024106",
   "stations": [
     {
       "station": "STATION_1 \u2014 CNC Milling",
@@ -104,18 +104,18 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "manufactured_part",
-          "severity": "MEDIUM",
-          "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
-          "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
-          "confidence": 0.947,
-          "provider": "template_engine"
-        },
-        {
           "defect_type": "component_misalignment",
           "severity": "HIGH",
           "root_cause": "Part feeder bowl vibration frequency shifted, causing inconsistent part presentation angle.",
           "recommended_action": "Adjust bowl feeder amplitude to 60 Hz nominal. Inspect and replace worn track sections.",
+          "confidence": 0.947,
+          "provider": "template_engine"
+        },
+        {
+          "defect_type": "manufactured_part",
+          "severity": "MEDIUM",
+          "root_cause": "Environmental factor: temperature/humidity outside nominal range affecting material properties.",
+          "recommended_action": "Check environmental controls (HVAC). Log deviation. Inspect upstream equipment.",
           "confidence": 0.831,
           "provider": "template_engine"
         }
@@ -167,7 +167,7 @@
       ],
       "root_cause_analyses": [
         {
-          "defect_type": "high_vis_vest",
+          "defect_type": "safety_helmet",
           "severity": "MEDIUM",
           "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
           "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",
@@ -175,7 +175,7 @@
           "provider": "template_engine"
         },
         {
-          "defect_type": "safety_helmet",
+          "defect_type": "high_vis_vest",
           "severity": "MEDIUM",
           "root_cause": "Equipment calibration out-of-tolerance \u2014 periodic maintenance overdue.",
           "recommended_action": "Schedule immediate calibration. Review maintenance log. Increase inspection frequency.",

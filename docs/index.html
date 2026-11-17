@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FactoryPulse | Anomaly Detection</title>
+  <meta name="description" content="Live manufacturing anomaly detection and PPE compliance dashboard">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script>
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#0b1220",
+            panel: "#111b2e",
+            mint: "#35d0ba",
+            cyan: "#67d4ff"
+          },
+          fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"] }
+        }
+      }
+    };
+  </script>
+  <style>
+    :html { scroll-behavior: smooth; }
+    body { background: #080d18; }
+    .grid-bg {
+      background-image: linear-gradient(rgba(103,212,255,.025) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(103,212,255,.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .card {
+      background: linear-gradient(145deg, rgba(18,29,50,.96), rgba(12,20,35,.96));
+      border: 1px solid rgba(148,163,184,.11);
+      box-shadow: 0 14px 45px rgba(0,0,0,.18);
+    }
+    .severity-critical { background: rgba(244,63,94,.14); color:#fb7185; border:1px solid rgba(244,63,94,.25); }
+    .severity-high { background: rgba(251,146,60,.14); color:#fb923c; border:1px solid rgba(251,146,60,.25); }
+    .severity-medium { background: rgba(250,204,21,.12); color:#facc15; border:1px solid rgba(250,204,21,.22); }
+    .severity-low { background: rgba(53,208,186,.12); color:#5eead4; border:1px solid rgba(53,208,186,.22); }
+    .cycle-btn.active { background:#35d0ba; color:#08111d; box-shadow:0 8px 28px rgba(53,208,186,.18); }
+    .station-tab.active { color:#35d0ba; border-color:#35d0ba; background:rgba(53,208,186,.07); }
+    ::-webkit-scrollbar { width:8px; height:8px; }
+    ::-webkit-scrollbar-thumb { background:#26344c; border-radius:999px; }
+  </style>
+</head>
+<body class="min-h-screen text-slate-200 font-sans grid-bg">
+  <header class="sticky top-0 z-40 border-b border-white/[0.07] bg-[#080d18]/90 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-4 lg:px-8">
+      <div class="flex items-center gap-3">
+        <div class="grid h-10 w-10 place-items-center rounded-xl bg-mint text-ink">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 21V9l6 4V7l6 4V3l6 4v14H3Z"/><path d="M7 17h2m4 0h2m4 0h1"/></svg>
+        </div>
+        <div>
+          <div class="text-sm font-bold tracking-wide text-white">FACTORY<span class="text-mint">PULSE</span></div>
+          <div class="text-[10px] font-medium uppercase tracking-[0.22em] text-slate-500">Production Intelligence</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div id="liveStatus" class="hidden items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/[0.07] px-3 py-2 text-xs font-semibold text-emerald-300 sm:flex">
+          <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span>
+          System live
+        </div>
+        <div class="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-xs font-bold text-slate-300">AP</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-[1440px] px-5 pb-12 pt-7 lg:px-8">
+    <section class="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      <div>
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.24em] text-mint">Operations overview</p>
+        <h1 class="text-2xl font-bold tracking-tight text-white md:text-3xl">Manufacturing control center</h1>
+      </div>
+      <div id="lastUpdated" class="text-xs text-slate-500">Loading cycle reports...</div>
+    </section>
+
+    <section class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+      <article class="card rounded-2xl p-4 md:p-5">
+        <div class="mb-5 flex items-start justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Cycles executed</span>
+          <span class="rounded-lg bg-cyan/10 p-2 text-cyan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+        </div>
+        <div id="totalCycles" class="text-3xl font-bold text-white">--</div>
+        <div class="mt-1 text-xs text-slate-500">Production runs</div>
+      </article>
+      <article class="card rounded-2xl p-4 md:p-5">
+        <div class="mb-5 flex items-start justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Defects detected</span>
+          <span class="rounded-lg bg-amber-400/10 p-2 text-amber-400"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4m0 3v.1"/></svg></span>
+        </div>
+        <div id="totalDefects" class="text-3xl font-bold text-white">--</div>
+        <div class="mt-1 text-xs text-slate-500">Across all cycles</div>
+      </article>
+      <article class="card rounded-2xl p-4 md:p-5">
+        <div class="mb-5 flex items-start justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">PPE violations</span>
+          <span class="rounded-lg bg-rose-400/10 p-2 text-rose-400"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2M12 11v4"/></svg></span>
+        </div>
+        <div id="ppeViolations" class="text-3xl font-bold text-white">--</div>
+        <div class="mt-1 text-xs text-slate-500">Missing helmet / vest</div>
+      </article>
+      <article class="card rounded-2xl p-4 md:p-5">
+        <div class="mb-5 flex items-start justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">System health</span>
+          <span id="healthIcon" class="rounded-lg bg-emerald-400/10 p-2 text-emerald-400"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></span>
+        </div>
+        <div id="systemHealth" class="text-3xl font-bold text-emerald-400">--</div>
+        <div id="healthDetail" class="mt-1 text-xs text-slate-500">Assessing telemetry</div>
+      </article>
+    </section>
+
+    <section class="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-[260px_minmax(0,1fr)]">
+      <aside class="card h-fit rounded-2xl p-4">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-sm font-bold text-white">Cycle timeline</h2>
+          <span id="cycleCount" class="rounded-md bg-white/[0.05] px-2 py-1 text-[10px] text-slate-400">0 runs</span>
+        </div>
+        <div id="cycleList" class="space-y-2"></div>
+      </aside>
+
+      <div class="min-w-0 space-y-5">
+        <article class="card overflow-hidden rounded-2xl">
+          <div class="flex flex-col gap-3 border-b border-white/[0.07] px-4 py-4 sm:flex-row sm:items-center sm:justify-between md:px-5">
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 id="selectedCycleTitle" class="text-base font-bold text-white">Cycle Inspector</h2>
+                <span id="selectedSeverity" class="rounded-md px-2 py-1 text-[10px] font-bold"></span>
+              </div>
+              <p id="selectedCycleMeta" class="mt-1 text-xs text-slate-500">Loading...</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="prevCycle" class="rounded-lg border border-white/10 p-2 text-slate-400 transition hover:border-mint/30 hover:text-mint" aria-label="Previous cycle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button id="nextCycle" class="rounded-lg border border-white/10 p-2 text-slate-400 transition hover:border-mint/30 hover:text-mint" aria-label="Next cycle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+          <div id="stationTabs" class="grid grid-cols-2 gap-2 border-b border-white/[0.07] p-3 md:grid-cols-4"></div>
+          <div id="stationDetail" class="p-4 md:p-5"></div>
+        </article>
+
+        <article class="card rounded-2xl p-4 md:p-5">
+          <div class="mb-5 flex items-start justify-between">
+            <div>
+              <h2 class="text-sm font-bold text-white">Anomaly analytics</h2>
+              <p class="mt-1 text-xs text-slate-500">Defect classifications and severity distribution</p>
+            </div>
+            <div id="chartLegend" class="hidden gap-3 text-[10px] text-slate-400 sm:flex"></div>
+          </div>
+          <div class="h-[260px] md:h-[310px]"><canvas id="analyticsChart"></canvas></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="loadingError" class="fixed bottom-5 left-1/2 hidden -translate-x-1/2 rounded-xl border border-rose-400/20 bg-[#24131b] px-4 py-3 text-sm text-rose-300 shadow-2xl"></div>
+
+  <script>
+    const severityRank = { LOW: 1, MEDIUM: 2, HIGH: 3, CRITICAL: 4 };
+    let reports = [];
+    let selectedCycle = 0;
+    let selectedStation = 0;
+    let analyticsChart;
+
+    const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
+
+    function severityClass(severity) {
+      return `severity-${String(severity || "LOW").toLowerCase()}`;
+    }
+
+    function stationShortName(name) {
+      if (name.includes("CNC")) return "CNC Milling";
+      if (name.includes("Thermal")) return "Thermal";
+      if (name.includes("Robotic")) return "Robotic";
+      if (name.includes("QA")) return "QA Zone";
+      return name;
+    }
+
+    function stationNumber(name) {
+      const match = name.match(/STATION_(\d)/);
+      return match ? match[1] : "?";
+    }
+
+    function highestSeverity(station) {
+      return station.root_cause_analyses.reduce((highest, item) =>
+        severityRank[item.severity] > severityRank[highest] ? item.severity : highest, "LOW");
+    }
+
+    function cycleSeverity(report) {
+      let result = "LOW";
+      report.stations.forEach((station) => station.root_cause_analyses.forEach((item) => {
+        if (severityRank[item.severity] > severityRank[result]) result = item.severity;
+      }));
+      const missingPpe = report.stations.flatMap(s => s.detections).filter(d => d.category === "ppe" && d.class.startsWith("missing_"));
+      if (missingPpe.length) result = "CRITICAL";
+      return result;
+    }
+
+    function countDefects(report) {
+      return report.stations.reduce((sum, station) =>
+        sum + station.detections.filter(d => d.category === "defect").length, 0);
+    }
+
+    function countPpe(report) {
+      return report.stations.reduce((sum, station) =>
+        sum + station.detections.filter(d => d.category === "ppe" && d.class.startsWith("missing_")).length, 0);
+    }
+
+    function renderOverview() {
+      const totalDefects = reports.reduce((sum, report) => sum + countDefects(report), 0);
+      const ppeViolations = reports.reduce((sum, report) => sum + countPpe(report), 0);
+      document.getElementById("totalCycles").textContent = reports.length;
+      document.getElementById("totalDefects").textContent = totalDefects;
+      document.getElementById("ppeViolations").textContent = ppeViolations;
+      document.getElementById("cycleCount").textContent = `${reports.length} runs`;
+
+      const current = reports[reports.length - 1];
+      const criticalStations = current ? current.stations.filter(s => s.telemetry.status === "CRITICAL").length : 0;
+      const warningStations = current ? current.stations.filter(s => s.telemetry.status === "WARNING").length : 0;
+      const health = criticalStations || countPpe(current) ? "Critical" : warningStations ? "Warning" : "Healthy";
+      const healthEl = document.getElementById("systemHealth");
+      healthEl.textContent = health;
+      healthEl.className = `text-3xl font-bold ${health === "Healthy" ? "text-emerald-400" : health === "Warning" ? "text-amber-400" : "text-rose-400"}`;
+      document.getElementById("healthDetail").textContent =
+        health === "Healthy" ? "All stations nominal" : `${criticalStations} station${criticalStations === 1 ? "" : "s"} critical`;
+
+      const timestamps = reports.map(r => r.timestamp).filter(Boolean).sort();
+      if (timestamps.length) {
+        const date = new Date(timestamps[timestamps.length - 1]);
+        document.getElementById("lastUpdated").textContent =
+          `Latest report · ${date.toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}`;
+      }
+    }
+
+    function renderCycleList() {
+      const list = document.getElementById("cycleList");
+      list.innerHTML = "";
+      reports.forEach((report, index) => {
+        const severity = cycleSeverity(report);
+        const defects = countDefects(report);
+        const ppe = countPpe(report);
+        const button = document.createElement("button");
+        button.className = `cycle-btn w-full rounded-xl border border-white/[0.07] px-3 py-3 text-left transition ${index === selectedCycle ? "active" : "hover:border-white/15 hover:bg-white/[0.03]"}`;
+        button.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold ${index === selectedCycle ? "" : "text-slate-300"}">Cycle ${String(report.cycle_id).padStart(2, "0")}</span>
+            <span class="text-[9px] font-bold ${index === selectedCycle ? "text-ink/70" : severityClass(severity).includes("critical") ? "text-rose-400" : "text-slate-500"}">${severity}</span>
+          </div>
+          <div class="mt-2 text-[10px] ${index === selectedCycle ? "text-ink/65" : "text-slate-500"}">${defects} defect${defects === 1 ? "" : "s"} · ${ppe} PPE violation${ppe === 1 ? "" : "s"}</div>`;
+        button.addEventListener("click", () => { selectedCycle = index; selectedStation = 0; renderAll(); });
+        list.appendChild(button);
+      });
+    }
+
+    function renderTabsAndDetail() {
+      const report = reports[selectedCycle];
+      if (!report) return;
+      const severity = cycleSeverity(report);
+      const titleSeverity = document.getElementById("selectedSeverity");
+      titleSeverity.textContent = severity;
+      titleSeverity.className = `rounded-md px-2 py-1 text-[10px] font-bold ${severityClass(severity)}`;
+      document.getElementById("selectedCycleTitle").textContent = report.batch_id.replaceAll("_", " ");
+      document.getElementById("selectedCycleMeta").textContent =
+        `Cycle ${String(report.cycle_id).padStart(2, "0")} · ${report.stations.length} stations · ${report.timestamp ? new Date(report.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "Recorded report"}`;
+
+      const tabs = document.getElementById("stationTabs");
+      tabs.innerHTML = "";
+      report.stations.forEach((station, index) => {
+        const stationSeverity = highestSeverity(station);
+        const missingPpe = station.detections.filter(d => d.category === "ppe" && d.class.startsWith("missing_")).length;
+        const defectCount = station.detections.filter(d => d.category === "defect").length;
+        const button = document.createElement("button");
+        button.className = `station-tab rounded-lg border border-transparent px-3 py-3 text-left transition ${index === selectedStation ? "active" : "hover:bg-white/[0.03]"}`;
+        button.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-wider ${index === selectedStation ? "text-mint" : "text-slate-500"}">Station ${stationNumber(station.station)}</span>
+            <span class="h-1.5 w-1.5 rounded-full ${station.telemetry.status === "CRITICAL" ? "bg-rose-400" : station.telemetry.status === "WARNING" ? "bg-amber-400" : "bg-emerald-400"}"></span>
+          </div>
+          <div class="mt-1 truncate text-xs font-semibold ${index === selectedStation ? "text-white" : "text-slate-300"}">${escapeHtml(stationShortName(station.station))}</div>
+          <div class="mt-1 text-[9px] text-slate-500">${defectCount} defect · ${missingPpe} PPE</div>`;
+        button.addEventListener("click", () => { selectedStation = index; renderTabsAndDetail(); });
+        tabs.appendChild(button);
+      });
+
+      const station = report.stations[selectedStation];
+      renderStationDetail(station);
+    }
+
+    function renderStationDetail(station) {
+      const detail = document.getElementById("stationDetail");
+      const analyses = station.root_cause_analyses || [];
+      const defectDetections = station.detections.filter(d => d.category === "defect");
+      const ppeDetections = station.detections.filter(d => d.category === "ppe");
+      const missingPpe = ppeDetections.filter(d => d.class.startsWith("missing_"));
+      const statusSeverity = highestSeverity(station);
+      const tel = station.telemetry;
+
+      const analysisItems = analyses.length ? analyses.map((item) => `
+        <div class="rounded-xl border border-white/[0.07] bg-black/[0.08] p-3">
+          <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <span class="font-mono text-xs font-bold text-slate-200">${escapeHtml(item.defect_type)}</span>
+            <span class="${severityClass(item.severity)} rounded-md px-2 py-1 text-[9px] font-bold">${escapeHtml(item.severity)}</span>
+          </div>
+          <p class="text-xs leading-relaxed text-slate-300">${escapeHtml(item.root_cause)}</p>
+          <div class="mt-2 border-t border-white/[0.06] pt-2 text-[11px] text-slate-500">
+            <span class="font-semibold text-mint">Action:</span> ${escapeHtml(item.recommended_action)}
+          </div>
+          <div class="mt-2 text-[10px] text-slate-500">${Math.round(item.confidence * 100)}% confidence · ${escapeHtml(item.provider)}</div>
+        </div>`).join("") : `<div class="rounded-xl border border-emerald-400/10 bg-emerald-400/[0.04] p-4 text-sm text-emerald-300">No anomalies detected at this station.</div>`;
+
+      detail.innerHTML = `
+        <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_240px]">
+          <div>
+            <div class="mb-4 flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-mint">Station ${stationNumber(station.station)}</div>
+                <h3 class="mt-1 text-lg font-bold text-white">${escapeHtml(stationShortName(station.station))}</h3>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="${station.telemetry.status === "CRITICAL" ? "severity-critical" : station.telemetry.status === "WARNING" ? "severity-high" : "severity-low"} rounded-md px-2 py-1 text-[9px] font-bold">${escapeHtml(station.telemetry.status)}</span>
+                ${defectDetections.length ? `<span class="severity-high rounded-md px-2 py-1 text-[9px] font-bold">${defectDetections.length} defect${defectDetections.length === 1 ? "" : "s"}</span>` : ""}
+                ${missingPpe.length ? `<span class="severity-critical rounded-md px-2 py-1 text-[9px] font-bold">${missingPpe.length} PPE alert${missingPpe.length === 1 ? "" : "s"}</span>` : ""}
+              </div>
+            </div>
+            <div class="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              ${[
+                ["Temperature", `${tel.temperature_c}°C`],
+                ["Vibration", `${tel.vibration_mm_s} mm/s`],
+                ["Pressure", `${tel.pressure_bar} bar`],
+                ["Conveyor", `${tel.conveyor_speed} m/s`]
+              ].map(([label, value]) => `<div class="rounded-xl border border-white/[0.06] bg-white/[0.025] p-3"><div class="text-[9px] uppercase tracking-wider text-slate-500">${label}</div><div class="mt-1 text-xs font-bold text-slate-200">${value}</div></div>`).join("")}
+            </div>
+            <div class="mb-2 flex items-center justify-between">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Root-cause analysis</h4>
+              <span class="${severityClass(statusSeverity)} rounded-md px-2 py-1 text-[9px] font-bold">${statusSeverity}</span>
+            </div>
+            <div class="space-y-2">${analysisItems}</div>
+          </div>
+          <aside class="rounded-xl border border-white/[0.07] bg-black/[0.10] p-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Detection inventory</h4>
+            <div class="mt-3 space-y-2">
+              ${station.detections.map(d => `
+                <div class="flex items-center justify-between gap-2 border-b border-white/[0.05] pb-2 last:border-0">
+                  <div class="min-w-0">
+                    <div class="truncate font-mono text-[11px] ${d.class.startsWith("missing_") ? "text-rose-300" : d.category === "defect" ? "text-amber-300" : "text-slate-300"}">${escapeHtml(d.class)}</div>
+                    <div class="mt-0.5 text-[9px] uppercase text-slate-600">${escapeHtml(d.category)}</div>
+                  </div>
+                  <span class="text-[10px] font-bold text-slate-400">${Math.round(d.confidence * 100)}%</span>
+                </div>`).join("")}
+            </div>
+            ${ppeDetections.length ? `
+              <div class="mt-4 rounded-lg border border-white/[0.06] p-3">
+                <div class="text-[9px] font-bold uppercase tracking-wider text-slate-500">PPE status</div>
+                <div class="mt-2 ${missingPpe.length ? "text-rose-300" : "text-emerald-300"} text-xs font-bold">${missingPpe.length ? "Violation detected" : "Compliant"}</div>
+              </div>` : ""}
+          </aside>
+        </div>`;
+    }
+
+    function renderChart() {
+      const labels = reports.map(r => `C${String(r.cycle_id).padStart(2, "0")}`);
+      const severities = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
+      const defectClasses = [...new Set(reports.flatMap(r => r.stations.flatMap(s =>
+        s.detections.filter(d => d.category === "defect").map(d => d.class))))];
+      const frequency = defectClasses.map(defect =>
+        reports.reduce((sum, r) => sum + r.stations.reduce((stationSum, s) =>
+          stationSum + s.detections.filter(d => d.category === "defect" && d.class === defect).length, 0), 0));
+
+      const severityCounts = severities.map(severity => reports.reduce((sum, r) =>
+        sum + r.stations.reduce((stationSum, s) =>
+          stationSum + s.root_cause_analyses.filter(a => a.severity === severity).length, 0), 0));
+
+      const ctx = document.getElementById("analyticsChart");
+      if (typeof Chart === "undefined") {
+        ctx.parentElement.innerHTML = defectClasses.map((defect, index) =>
+          `<div class="mb-3"><div class="mb-1 flex justify-between text-xs text-slate-400"><span>${escapeHtml(defect.replaceAll("_", " "))}</span><b class="text-mint">${frequency[index]}</b></div><div class="h-2 overflow-hidden rounded-full bg-white/[0.06]"><div class="h-full rounded-full bg-mint" style="width:${frequency[index] ? Math.min(100, frequency[index] * 20) : 0}%"></div></div></div>`
+        ).join("");
+        const legend = document.getElementById("chartLegend");
+        legend.innerHTML = severityCounts.map((count, index) =>
+          `<span><b class="text-slate-300">${count}</b> ${severities[index].toLowerCase()}</span>`).join("");
+        return;
+      }
+      if (analyticsChart) analyticsChart.destroy();
+      analyticsChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: defectClasses.map(x => x.replaceAll("_", " ")),
+          datasets: [{
+            label: "Defect frequency",
+            data: frequency,
+            backgroundColor: "#35d0ba",
+            borderRadius: 6,
+            borderSkipped: false,
+            barPercentage: 0.58
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: "index" },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "#111b2e",
+              borderColor: "rgba(148,163,184,.15)",
+              borderWidth: 1,
+              titleColor: "#fff",
+              bodyColor: "#cbd5e1",
+              padding: 10
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: "#64748b", font: { size: 10 } } },
+            y: { beginAtZero: true, suggestedMax: Math.max(...frequency, 2), grid: { color: "rgba(148,163,184,.07)" }, ticks: { color: "#64748b", precision: 0 } }
+          }
+        }
+      });
+
+      const legend = document.getElementById("chartLegend");
+      legend.innerHTML = severityCounts.map((count, index) =>
+        `<span><b class="text-slate-300">${count}</b> ${severities[index].toLowerCase()}</span>`).join("");
+    }
+
+    function renderAll() {
+      renderOverview();
+      renderCycleList();
+      renderTabsAndDetail();
+      renderChart();
+    }
+
+    async function loadReports() {
+      try {
+        const manifestResponse = await fetch("./data/manifest.json");
+        if (!manifestResponse.ok) throw new Error("Report manifest unavailable");
+        const manifest = await manifestResponse.json();
+        reports = await Promise.all(manifest.files.map(async (file) => {
+          const response = await fetch(`./data/${encodeURIComponent(file)}`);
+          if (!response.ok) throw new Error(`Could not load ${file}`);
+          return response.json();
+        }));
+        reports.sort((a, b) => a.cycle_id - b.cycle_id);
+        selectedCycle = reports.length - 1;
+        renderAll();
+      } catch (error) {
+        const alert = document.getElementById("loadingError");
+        alert.textContent = `Dashboard data error: ${error.message}`;
+        alert.classList.remove("hidden");
+      }
+    }
+
+    document.getElementById("prevCycle").addEventListener("click", () => {
+      if (selectedCycle > 0) { selectedCycle--; selectedStation = 0; renderAll(); }
+    });
+    document.getElementById("nextCycle").addEventListener("click", () => {
+      if (selectedCycle < reports.length - 1) { selectedCycle++; selectedStation = 0; renderAll(); }
+    });
+
+    loadReports();
+  </script>
+</body>
+</html>
