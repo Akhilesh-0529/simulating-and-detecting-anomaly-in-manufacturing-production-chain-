@@ -197,4 +197,3 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-*Built with ❤️ for the Cognizant Technoverse Hackathon*
